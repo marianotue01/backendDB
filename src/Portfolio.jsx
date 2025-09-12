@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "./components/card";
 import { Badge } from "./components/badge";
-import { FaReact, FaPython, FaDocker, FaRobot } from "react-icons/fa";
+import { FaReact, FaPython, FaDocker, FaRobot, FaGithub } from "react-icons/fa";
 import { SiMongodb, SiFastapi, SiNodedotjs } from "react-icons/si";
 import { MdDescription } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -26,7 +26,7 @@ export default function Portfolio() {
         {
           icon: <img src="/render.png" alt="Render" className="w-10 h-10 object-contain" />,
           name: "Render",
-          circular: false, // Render rectangular
+          circular: false,
         },
       ],
     },
@@ -56,7 +56,18 @@ export default function Portfolio() {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-8">
-      <h1 className="text-4xl font-bold mb-8">My PoCs</h1>
+      <div className="flex items-center mb-8">
+        <h1 className="text-4xl font-bold mr-4">My PoCs</h1>
+        <a
+          href="https://github.com/marianotue01"
+          target="_blank"
+          rel="noreferrer"
+          className="text-white hover:text-gray-400 transition-colors"
+          title="Mi GitHub"
+        >
+          <FaGithub size={32} />
+        </a>
+      </div>
 
       <div className="flex flex-col gap-6">
         {poCs.map((poc, idx) => (
