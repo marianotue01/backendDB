@@ -11,7 +11,7 @@ export default function ProposalManager() {
   const [dependencies, setDependencies] = useState(0);
   const [evaluated, setEvaluated] = useState([]);
 
-  const backendURL = "http://localhost:8000";
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     fetchProposals();
