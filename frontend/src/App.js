@@ -12,7 +12,7 @@ export default function App() {
   const [evaluated, setEvaluated] = useState([]);
 
   // URL del backend desplegado en Render
-  const backendURL = process.env.REACT_APP_BACKEND_URL || "https://propeval.onrender.com";
+const backendURL = (process.env.REACT_APP_BACKEND_URL || "https://propeval.onrender.com").replace(/\/$/, "");
 
   useEffect(() => {
     fetchProposals();
