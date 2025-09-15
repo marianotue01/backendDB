@@ -1,63 +1,154 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE = "http://localhost:8000/api"; // Cambiar si deploy en Render
-
-const ProposalManager = () => {
+export default function ProposalManager() {
   const [proposals, setProposals] = useState([]);
-  const [form, setForm] = useState({ title:"", description:"", value:0, cost:0, risk:0, dependencies:0 });
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState(0);
+  const [cost, setCost] = useState(0);
+  const [risk, setRisk] = useState(0);
+  const [dependencies, setDependencies] = useState(0);
   const [evaluated, setEvaluated] = useState([]);
 
-  const fetchProposals = async () => {
-    const res = await axios.get(`${API_BASE}/proposals`);
-    setProposals(res.data);
-  };
+  const backendURL = "http://localhost:8000";
 
-  useEffect(() => { fetchProposals(); }, []);
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    await axios.post(`${API_BASE}/proposals`, form);
-    setForm({ title:"", description:"", value:0, cost:0, risk:0, dependencies:0 });
+  useEffect(() => {
     fetchProposals();
+  }, []);
+
+  const fetchProposals = async () => {
+    try {
+      const res = await axios.get(`${backendURL}/api/proposals`);
+      setProposals(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEvaluate = async () => {
-    const res = await axios.post(`${API_BASE}/evaluate`);
-    setEvaluated(res.data);
+  const createProposal = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${backendURL}/api/proposals`, {
+        title,
+        description,
+        value: Number(value),
+        cost: Number(cost),
+        risk: Number(risk),
+        dependencies: Number(dependencies)
+      });
+      setTitle("");
+      setDescription("");
+      setValue(0);
+      setCost(0);
+      setRisk(0);
+      setDependencies(0);
+      fetchProposals();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const evaluateProposals = async () => {
+    try {
+      const res = await axios.post(`${backendURL}/api/evaluate`);
+      setEvaluated(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <div style={{ maxWidth: "700px", margin: "auto", padding:"20px" }}>
-      <h1>Evaluador de Propuestas</h1>
-
-      <form onSubmit={handleCreate}>
-        <input placeholder="Título" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} />
-        <input placeholder="Descripción" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
-        <input type="number" placeholder="Valor" value={form.value} onChange={e=>setForm({...form,value:Number(e.target.value)})} />
-        <input type="number" placeholder="Costo" value={form.cost} onChange={e=>setForm({...form,cost:Number(e.target.value)})} />
-        <input type="number" placeholder="Riesgo" value={form.risk} onChange={e=>setForm({...form,risk:Number(e.target.value)})} />
-        <input type="number" placeholder="Dependencias" value={form.dependencies} onChange={e=>setForm({...form,dependencies:Number(e.target.value)})} />
-        <button type="submit">Agregar propuesta</button>
+    <div>
+      <h2>Crear nueva propuesta</h2>
+      <form onSubmit={createProposal} style={{ marginBottom: "2rem" }}>
+        <label>
+          Título:
+          <input
+            type="text"
+            placeholder="Ej: Implementar nueva funcionalidad"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Descripción:
+          <input
+            type="text"
+            placeholder="Descripción breve de la propuesta"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Valor (beneficio estimado):
+          <input
+            type="number"
+            placeholder="Ej: 100"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Costo:
+          <input
+            type="number"
+            placeholder="Ej: 50"
+            value={cost}
+            onChange={(e) => setCost(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Riesgo:
+          <input
+            type="number"
+            placeholder="Ej: 20"
+            value={risk}
+            onChange={(e) => setRisk(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <label>
+          Dependencias:
+          <input
+            type="number"
+            placeholder="Ej: 2"
+            value={dependencies}
+            onChange={(e) => setDependencies(e.target.value)}
+            required
+          />
+        </label>
+        <br />
+        <button type="submit">Crear Propuesta</button>
       </form>
 
-      <button onClick={handleEvaluate} style={{ marginTop:"10px" }}>Evaluar Propuestas</button>
-
-      <h2>Ranking</h2>
+      <h2>Propuestas existentes</h2>
       <ul>
-        {evaluated.map(p => (
-          <li key={p._id}>{p.title} — Score: {p.score.toFixed(2)}</li>
+        {proposals.map((p) => (
+          <li key={p._id}>
+            <strong>{p.title}</strong> - {p.description} | Valor: {p.value} | Costo: {p.cost} | Riesgo: {p.risk} | Dependencias: {p.dependencies}
+          </li>
         ))}
       </ul>
 
-      <h2>Listado</h2>
-      <ul>
-        {proposals.map(p => (
-          <li key={p._id}>{p.title} — Valor:{p.value}, Costo:{p.cost}, Riesgo:{p.risk}</li>
+      <h2>Evaluación y ranking</h2>
+      <button onClick={evaluateProposals}>Evaluar Propuestas</button>
+      <ol>
+        {evaluated.map((p) => (
+          <li key={p._id}>
+            <strong>{p.title}</strong> - Score: {p.score.toFixed(2)}
+          </li>
         ))}
-      </ul>
+      </ol>
     </div>
   );
-};
-
-export default ProposalManager;
+}
