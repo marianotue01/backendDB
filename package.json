@@ -1,40 +1,14 @@
 {
-  "name": "Propeval",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@vercel/analytics": "^1.5.0",
-    "framer-motion": "^12.23.12",
-    "node-fetch": "3.3.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^4.12.0",
-    "react-router-dom": "^7.8.1",
-    "react-vertical-timeline-component": "^3.3.0"
-  },
+  "name": "prop-evaluation-backend",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "dev": "vite"
+    "dev": "node api/index.js"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^9.2.0",
-    "gh-pages": "^6.3.0",
-    "postcss": "^8.5.6",
-    "react-scripts": "^5.0.1",
-    "tailwindcss": "^3.4.17"
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2",
+    "mongoose": "^8.3.1"
   }
 }
