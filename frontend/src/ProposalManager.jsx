@@ -1,3 +1,4 @@
+// src/ProposalManager.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -11,7 +12,8 @@ export default function ProposalManager() {
   const [dependencies, setDependencies] = useState(0);
   const [evaluated, setEvaluated] = useState([]);
 
-  const backendURL = process.env.REACT_APP_BACKEND_URL;
+  // <-- Aquí apuntamos al backend desplegado en Render -->
+  const backendURL = "https://propeval.onrender.com"; // SIN slash final
 
   useEffect(() => {
     fetchProposals();
@@ -22,7 +24,7 @@ export default function ProposalManager() {
       const res = await axios.get(`${backendURL}/api/proposals`);
       setProposals(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching proposals:", err);
     }
   };
 
@@ -35,7 +37,7 @@ export default function ProposalManager() {
         value: Number(value),
         cost: Number(cost),
         risk: Number(risk),
-        dependencies: Number(dependencies)
+        dependencies: Number(dependencies),
       });
       setTitle("");
       setDescription("");
@@ -45,7 +47,7 @@ export default function ProposalManager() {
       setDependencies(0);
       fetchProposals();
     } catch (err) {
-      console.error(err);
+      console.error("Error creating proposal:", err);
     }
   };
 
@@ -54,12 +56,12 @@ export default function ProposalManager() {
       const res = await axios.post(`${backendURL}/api/evaluate`);
       setEvaluated(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error evaluating proposals:", err);
     }
   };
 
   return (
-    <div>
+    <div style={{ padding: "1rem", maxWidth: "800px", margin: "0 auto" }}>
       <h2>Crear nueva propuesta</h2>
       <form onSubmit={createProposal} style={{ marginBottom: "2rem" }}>
         <label>
