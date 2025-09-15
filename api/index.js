@@ -2,12 +2,14 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import Proposal from "./models/Proposal.js";
 
+// Cargar variables de entorno desde api/.env
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // permite llamadas desde cualquier origen, útil para frontend
+app.use(cors());
 
 // --- DB Connection ---
 mongoose
@@ -15,62 +17,49 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// --- Schema ---
-const propertySchema = new mongoose.Schema({
-  address: String,
-  size: Number,      // m²
-  rooms: Number,
-  price: Number      // precio real (si lo conocemos)
-});
-
-const Property = mongoose.model("Property", propertySchema);
-
 // --- Routes ---
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Backend running" });
 });
 
-// CRUD: crear propiedad
-app.post("/api/properties", async (req, res) => {
+// CRUD Proposals
+app.post("/api/proposals", async (req, res) => {
   try {
-    const property = new Property(req.body);
-    await property.save();
-    res.json(property);
+    const proposal = new Proposal(req.body);
+    await proposal.save();
+    res.json(proposal);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// CRUD: listar propiedades
-app.get("/api/properties", async (req, res) => {
-  const properties = await Property.find();
-  res.json(properties);
+app.get("/api/proposals", async (req, res) => {
+  try {
+    const proposals = await Proposal.find();
+    res.json(proposals);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Evaluación simple
-app.post("/api/evaluate", (req, res) => {
+// Evaluar propuestas
+app.post("/api/evaluate", async (req, res) => {
   try {
-    const { size, rooms } = req.body;
-
-    if (typeof size !== "number" || typeof rooms !== "number") {
-      return res.status(400).json({ error: "size y rooms deben ser números" });
-    }
-
-    const estimatedPrice = (size * 2500) + (rooms * 10000);
-
-    res.json({ size, rooms, estimatedPrice });
+    const proposals = await Proposal.find();
+    const evaluated = proposals
+      .map((p) => ({
+        ...p.toObject(),
+        score: p.value * 0.5 - p.cost * 0.3 - p.risk * 0.2
+      }))
+      .sort((a, b) => b.score - a.score);
+    res.json(evaluated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 // --- Run server ---
-// Render y Vercel usan la variable de entorno PORT
 const port = process.env.PORT || 8000;
-
-app.listen(port, () => {
-  console.log(`🚀 Backend running on port ${port}`);
-});
-
-export default app;
+app.listen(port, () => console.log(`🚀 Backend running on http://localhost:${port}`));
