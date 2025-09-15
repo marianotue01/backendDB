@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProposalManager() {
   const [proposals, setProposals] = useState([]);
@@ -11,7 +10,7 @@ export default function ProposalManager() {
   const [risk, setRisk] = useState(0);
   const [dependencies, setDependencies] = useState(0);
   const [evaluated, setEvaluated] = useState([]);
-  const [showTooltip, setShowTooltip] = useState(null); // tooltip activo
+  const [showCalc, setShowCalc] = useState({}); // controla qué cálculos mostrar
 
   const backendURL = process.env.REACT_APP_BACKEND_URL;
 
@@ -58,6 +57,10 @@ export default function ProposalManager() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const toggleCalc = (id) => {
+    setShowCalc((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
@@ -130,7 +133,7 @@ export default function ProposalManager() {
           />
         </label>
         <br />
-        <button type="submit">Crear Propuesta</button>
+        <button type="submit">Crear Propues66ta</button>
       </form>
 
       <h2>Propuestas existentes</h2>
@@ -143,42 +146,22 @@ export default function ProposalManager() {
       </ul>
 
       <h2>Evaluación y ranking</h2>
-      <button onClick={evaluateProposals}>Evaluar Propuestas</button>
+      <button onClick={evaluateProposals}>Evaluar Propuestas 34</button>
       <ol>
         {evaluated.map((p) => (
-          <li key={p._id} style={{ position: "relative", marginBottom: "1rem" }}>
+          <li key={p._id}>
             <strong>{p.title}</strong> - Score: {p.score.toFixed(2)}{" "}
             <span
-              style={{ marginLeft: "0.5rem", cursor: "pointer", color: "blue", fontWeight: "bold" }}
-              onClick={() => setShowTooltip(showTooltip === p._id ? null : p._id)}
+              style={{ cursor: "pointer", color: "blue", marginLeft: "5px" }}
+              onClick={() => toggleCalc(p._id)}
             >
               ?
             </span>
-            <AnimatePresence>
-              {showTooltip === p._id && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  style={{
-                    position: "absolute",
-                    top: "1.5rem",
-                    left: "2rem",
-                    backgroundColor: "#f0f0f0",
-                    padding: "0.5rem",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    zIndex: 100
-                  }}
-                >
-                  <div><strong>Cálculo:</strong></div>
-                  <div>Value: {p.value} × 0.5 = {(p.value * 0.5).toFixed(2)}</div>
-                  <div>Cost: {p.cost} × 0.3 = {(p.cost * 0.3).toFixed(2)}</div>
-                  <div>Risk: {p.risk} × 0.2 = {(p.risk * 0.2).toFixed(2)}</div>
-                  <div><strong>Score: {(p.value * 0.5 - p.cost * 0.3 - p.risk * 0.2).toFixed(2)}</strong></div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {showCalc[p._id] && (
+              <div style={{ fontSize: "0.9em", color: "#555" }}>
+                Cálculo: {p.value}*0.5 - {p.cost}*0.3 - {p.risk}*0.2 = {p.score.toFixed(2)}
+              </div>
+            )}
           </li>
         ))}
       </ol>
