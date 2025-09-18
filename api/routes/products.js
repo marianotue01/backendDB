@@ -3,7 +3,15 @@ import Product from "../models/Product.js";
 
 const router = express.Router();
 
-// GET all products
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get all products
+ *     responses:
+ *       200:
+ *         description: List of products
+ */
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -13,45 +21,33 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET product by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ error: "Product not found" });
-    res.json(product);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// POST create new product
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Product created
+ */
 router.post("/", async (req, res) => {
   try {
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.status(201).json(newProduct);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// PUT update product by ID
-router.put("/:id", async (req, res) => {
-  try {
-    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ error: "Product not found" });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE product by ID
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "Product not found" });
-    res.json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

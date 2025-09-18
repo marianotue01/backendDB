@@ -3,7 +3,15 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// GET all users
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     responses:
+ *       200:
+ *         description: List of users
+ */
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
@@ -13,7 +21,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET user by ID
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: User ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User found
+ *       404:
+ *         description: User not found
+ */
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -24,34 +49,44 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST create new user
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               document:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               birthDate:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: User created
+ */
 router.post("/", async (req, res) => {
   try {
     const newUser = new User(req.body);
     await newUser.save();
     res.status(201).json(newUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// PUT update user by ID
-router.put("/:id", async (req, res) => {
-  try {
-    const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ error: "User not found" });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE user by ID
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await User.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "User not found" });
-    res.json({ message: "User deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

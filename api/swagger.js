@@ -11,14 +11,14 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "https://propeval.onrender.com",
+      url: "https://propeval.onrender.com", // Cambiar si usas local
     },
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: ["./routes/*.js"], // Path to the API docs
+  apis: ["./routes/*.js"], // Path to the route files with Swagger comments
 };
 
 const swaggerSpec = swaggerJsDoc(options);
