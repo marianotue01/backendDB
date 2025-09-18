@@ -1,7 +1,6 @@
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
-// Swagger definition
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
@@ -11,14 +10,14 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "https://propeval.onrender.com", // Cambiar si usas local
+      url: "https://propeval.onrender.com",
     },
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: ["./routes/*.js"], // Path to the route files with Swagger comments
+  apis: ["./routes/*.js"], // Path relative to swagger.js
 };
 
 const swaggerSpec = swaggerJsDoc(options);

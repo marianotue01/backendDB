@@ -8,6 +8,7 @@ const router = express.Router();
  * /api/users:
  *   get:
  *     summary: Get all users
+ *     tags: [Users]
  *     responses:
  *       200:
  *         description: List of users
@@ -25,14 +26,15 @@ router.get("/", async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   get:
- *     summary: Get user by ID
+ *     summary: Get a user by ID
+ *     tags: [Users]
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
- *         description: User ID
  *         schema:
  *           type: string
+ *         description: User ID
  *     responses:
  *       200:
  *         description: User found
@@ -54,6 +56,7 @@ router.get("/:id", async (req, res) => {
  * /api/users:
  *   post:
  *     summary: Create a new user
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:

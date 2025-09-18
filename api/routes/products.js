@@ -8,6 +8,7 @@ const router = express.Router();
  * /api/products:
  *   get:
  *     summary: Get all products
+ *     tags: [Products]
  *     responses:
  *       200:
  *         description: List of products
@@ -26,6 +27,7 @@ router.get("/", async (req, res) => {
  * /api/products:
  *   post:
  *     summary: Create a new product
+ *     tags: [Products]
  *     requestBody:
  *       required: true
  *       content:

@@ -8,6 +8,7 @@ const router = express.Router();
  * /api/user-products:
  *   get:
  *     summary: Get all user-product relationships
+ *     tags: [UserProducts]
  *     responses:
  *       200:
  *         description: List of relations
@@ -28,6 +29,7 @@ router.get("/", async (req, res) => {
  * /api/user-products:
  *   post:
  *     summary: Create a new user-product relationship
+ *     tags: [UserProducts]
  *     requestBody:
  *       required: true
  *       content:
