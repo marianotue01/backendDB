@@ -10,7 +10,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "https://propeval.onrender.com",
+      url: process.env.SWAGGER_SERVER_URL || "http://localhost:8000",
     },
   ],
 };
