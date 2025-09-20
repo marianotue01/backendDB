@@ -1,5 +1,6 @@
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
 
 const swaggerDefinition = {
   openapi: "3.0.0",
@@ -10,16 +11,18 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: process.env.SWAGGER_SERVER_URL || "http://localhost:8000",
+      url: process.env.SWAGGER_SERVER_URL || "http://localhost:5000",
     },
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: ["./routes/*.js"], // Path relative to swagger.js
+  apis: [path.resolve("api/routes/*.js")], // 🔹 ruta absoluta correcta
 };
 
 const swaggerSpec = swaggerJsDoc(options);
+
+console.log("Swagger paths detected:", Object.keys(swaggerSpec.paths || {}));
 
 export { swaggerUi, swaggerSpec };
