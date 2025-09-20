@@ -1,7 +1,10 @@
-// swagger.js
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const swaggerDefinition = {
   openapi: "3.0.0",
@@ -19,7 +22,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: [path.join(process.cwd(), "api/routes/*.js")], // funciona local + Render
+  apis: [path.join(__dirname, "routes/*.js")], // 🔹 ruta relativa desde swagger.js
 };
 
 const swaggerSpec = swaggerJsDoc(options);
