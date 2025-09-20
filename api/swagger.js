@@ -1,3 +1,4 @@
+// swagger.js
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
@@ -11,14 +12,14 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: process.env.SWAGGER_SERVER_URL || "http://localhost:8000",
+      url: process.env.SWAGGER_SERVER_URL || "http://localhost:5000",
     },
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: [path.resolve("api/routes/*.js")], // 🔹 ruta absoluta correcta
+  apis: [path.join(process.cwd(), "api/routes/*.js")], // funciona local + Render
 };
 
 const swaggerSpec = swaggerJsDoc(options);
