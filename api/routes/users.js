@@ -4,7 +4,7 @@ import User from "../models/User.js";
 const router = express.Router();
 
 /**
- * @swagger
+ * @openapi
  * /api/users:
  *   get:
  *     summary: Get all users
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * @swagger
+ * @openapi
  * /api/users/{id}:
  *   get:
  *     summary: Get a user by ID
@@ -52,7 +52,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /**
- * @swagger
+ * @openapi
  * /api/users:
  *   post:
  *     summary: Create a new user

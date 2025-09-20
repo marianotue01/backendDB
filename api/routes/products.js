@@ -4,7 +4,7 @@ import Product from "../models/Product.js";
 const router = express.Router();
 
 /**
- * @swagger
+ * @openapi
  * /api/products:
  *   get:
  *     summary: Get all products
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * @swagger
+ * @openapi
  * /api/products:
  *   post:
  *     summary: Create a new product

@@ -4,7 +4,7 @@ import UserProduct from "../models/UserProduct.js";
 const router = express.Router();
 
 /**
- * @swagger
+ * @openapi
  * /api/user-products:
  *   get:
  *     summary: Get all user-product relationships
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 });
 
 /**
- * @swagger
+ * @openapi
  * /api/user-products:
  *   post:
  *     summary: Create a new user-product relationship
